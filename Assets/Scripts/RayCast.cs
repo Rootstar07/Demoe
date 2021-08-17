@@ -7,6 +7,7 @@ public class RayCast : MonoBehaviour
 {
     public float range;
     public TextMeshProUGUI uiText;
+    public int 현재조사중인아이템코드;
        
     void Update()
     {
@@ -22,27 +23,47 @@ public class RayCast : MonoBehaviour
             if (hit.collider.CompareTag("Door"))
             {
                 uiText.text = "열기";
+                현재조사중인아이템코드 = 0;
             }
             else if (hit.collider.CompareTag("Object"))
             {
                 uiText.text = "조사하기";
+                현재조사중인아이템코드 = 0;
             }
             else if (hit.collider.CompareTag("Text"))
             {
                 uiText.text = "읽기";
+                현재조사중인아이템코드 = 0;
             }
             else if (hit.collider.CompareTag("item"))
             {
                 uiText.text = "가져가기";
+                현재조사중인아이템코드 = hit.collider.gameObject.GetComponent<ForItem>().아이템코드;
+
+                if (Input.GetMouseButtonDown(0))
+                {
+                    // 아이템 획득
+                    for (int i = 0; i < DataManager.instance.itemDatas.Length; i++)
+                    {
+                        if (DataManager.instance.itemDatas[i].코드 == 현재조사중인아이템코드)
+                        {
+                            hit.collider.gameObject.SetActive(false);
+                            DataManager.instance.itemDatas[i].인벤토리여부 = true;
+                            break;
+                        }
+                    }
+                }
             }
             else
             {
                 uiText.text = "";
+                현재조사중인아이템코드 = 0;
             }
         }
         else
         {
             uiText.text = "";
+            현재조사중인아이템코드 = 0;
         }
     }
 }

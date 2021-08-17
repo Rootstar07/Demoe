@@ -6,6 +6,7 @@ using TMPro;
 public class InventoryManager : MonoBehaviour
 {
     public GameObject inventory;
+    public GameObject tablet;
     public mouselook _mouselook;
     public GameObject slotList;
     public GameObject[] slotLists;
@@ -30,12 +31,14 @@ public class InventoryManager : MonoBehaviour
             if (inventory.activeSelf == true)
             {
                 inventory.SetActive(false);
+                tablet.SetActive(false);
                 Cursor.lockState = CursorLockMode.Locked;
                 _mouselook.canMouseMove = true;
             }
             else
             {
                 inventory.SetActive(true);
+                tablet.SetActive(true);
                 Cursor.lockState = CursorLockMode.Confined;
                 _mouselook.canMouseMove = false;
 
