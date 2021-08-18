@@ -9,6 +9,8 @@ public class DataManager : MonoBehaviour
 {
     [Header("아이템 데이터")]
     public ItemData[] itemDatas;
+    [Header("0: 메모, 1: 편지, 2: 보고서, 3: 신문, 4: 기타")]
+    public PaperData[] paperDatas;
 
     [System.Serializable]
     public class ItemData
@@ -18,14 +20,23 @@ public class DataManager : MonoBehaviour
         public bool 인벤토리여부;
         [TextArea]
         public string 설명;
-        public Image 이미지;
+        public Sprite 이미지;
     }
 
-    public enum Item
+    [System.Serializable]
+    public class PaperData
     {
-        없음,
-        사무실열쇠,
-        CD
+        public PaperData2[] 기록목록;
+    }
+
+    [System.Serializable]
+    public class PaperData2
+    {
+        public int 기록코드;
+        public string 기록이름;
+        public bool 기록활성여부;
+        [TextArea]
+        public string 내용;
     }
 
     public static DataManager instance;

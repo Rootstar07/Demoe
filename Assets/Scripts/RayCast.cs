@@ -6,7 +6,9 @@ using TMPro;
 public class RayCast : MonoBehaviour
 {
     public float range;
+    public UIManager uIManager;
     public TextMeshProUGUI uiText;
+    public PaperManager paperManager;
     public int 현재조사중인아이템코드;
        
     void Update()
@@ -30,10 +32,17 @@ public class RayCast : MonoBehaviour
                 uiText.text = "조사하기";
                 현재조사중인아이템코드 = 0;
             }
-            else if (hit.collider.CompareTag("Text"))
+            else if (hit.collider.CompareTag("paper"))
             {
                 uiText.text = "읽기";
                 현재조사중인아이템코드 = 0;
+
+                if (Input.GetMouseButtonDown(0))
+                {
+                    // 페이퍼 보여줌
+                    uIManager.ShowPaper(hit.collider.gameObject);
+                }
+
             }
             else if (hit.collider.CompareTag("item"))
             {

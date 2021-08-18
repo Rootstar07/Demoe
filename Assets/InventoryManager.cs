@@ -1,19 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class InventoryManager : MonoBehaviour
 {
-    public GameObject inventory;
-    public GameObject tablet;
-    public mouselook _mouselook;
     public GameObject slotList;
     public GameObject[] slotLists;
+    public Sprite 기본이미지;
+    
     public Color 슬롯활성색;
-    public Color 글자활성색;
     public Color 슬롯비활성색;
-    public Color 글자비활성색;
+
+    [Header("타켓 UI")]
+    public TextMeshProUGUI 아이템이름;
+    public TextMeshProUGUI 아이템설명;
 
     void Start()
     {
@@ -21,29 +23,6 @@ public class InventoryManager : MonoBehaviour
         for (int i = 0; i < slotList.transform.childCount; i++)
         {
             slotLists[i] = slotList.transform.GetChild(i).gameObject;
-        }
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            if (inventory.activeSelf == true)
-            {
-                inventory.SetActive(false);
-                tablet.SetActive(false);
-                Cursor.lockState = CursorLockMode.Locked;
-                _mouselook.canMouseMove = true;
-            }
-            else
-            {
-                inventory.SetActive(true);
-                tablet.SetActive(true);
-                Cursor.lockState = CursorLockMode.Confined;
-                _mouselook.canMouseMove = false;
-
-                CheckItem();
-            }
         }
     }
 
@@ -60,7 +39,7 @@ public class InventoryManager : MonoBehaviour
                 // 중복 아이템 검사
                 for (int j = 0; j < slotLists.Length; j++)
                 {
-                    if (slotLists[i].GetComponent<ForSlot>().가진아이템코드 == DataManager.instance.itemDatas[i].코드)
+                    if (slotLists[j].GetComponent<ForSlot>().가진아이템코드 == DataManager.instance.itemDatas[i].코드)
                     {
                         // 아이템 중복
                         canInventory = false;
@@ -80,9 +59,8 @@ public class InventoryManager : MonoBehaviour
                         if (slotLists[j].GetComponent<ForSlot>().가진아이템코드 == 0)
                         {
                             slotLists[j].GetComponent<ForSlot>().가진아이템코드 = DataManager.instance.itemDatas[i].코드;
-                            slotLists[i].GetComponent<ForSlot>().아이템이름.text = DataManager.instance.itemDatas[i].이름;
-                            slotLists[i].GetComponent<ForSlot>().아이템이름.color = 글자활성색;
-                            slotLists[i].GetComponent<ForSlot>().배경.color = 슬롯활성색;
+                            slotLists[j].GetComponent<ForSlot>().아이템이미지.sprite = DataManager.instance.itemDatas[i].이미지;
+                            // slotLists[i].GetComponent<ForSlot>().아이템이미지.color = 슬롯활성색;
                             break;
                         }
                     }
@@ -96,9 +74,20 @@ public class InventoryManager : MonoBehaviour
         for (int i = 0; i < slotLists.Length; i++)
         {
             slotLists[i].GetComponent<ForSlot>().가진아이템코드 = 0;
-            slotLists[i].GetComponent<ForSlot>().아이템이름.text = "비어있음";
-            slotLists[i].GetComponent<ForSlot>().아이템이름.color = 글자비활성색;
-            slotLists[i].GetComponent<ForSlot>().배경.color = 슬롯비활성색;
+            slotLists[i].GetComponent<ForSlot>().아이템이미지.sprite = 기본이미지;
+            // slotLists[i].GetComponent<ForSlot>().아이템이미지.color = 슬롯비활성색;
+
+            아이템이름.text = "";
+            아이템설명.text = "";
+        }
+    }
+
+    public void ItemClicked(ForSlot forSlot)
+    {
+        if (forSlot.가진아이템코드 != 0)
+        {
+            아이템이름.text = DataManager.instance.itemDatas[forSlot.가진아이템코드].이름;
+            아이템설명.text = DataManager.instance.itemDatas[forSlot.가진아이템코드].설명;
         }
     }
 

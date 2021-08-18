@@ -8,6 +8,7 @@ TagManager:
   - Object
   - Text
   - item
+  - paper
   layers:
   - Default
   - TransparentFX
