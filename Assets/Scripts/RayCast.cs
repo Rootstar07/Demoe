@@ -21,7 +21,6 @@ public class RayCast : MonoBehaviour
 
     void Update()
     {
-
         // 레이캐스트가 보이게
         Debug.DrawRay(transform.position, transform.forward * range, Color.green);
 
@@ -110,7 +109,7 @@ public class RayCast : MonoBehaviour
                 else
                 {
                     uiText.text = "이미 해제된 단말이다";
-                }               
+                }
             }
             else if (hit.collider.CompareTag("card") && rayActived)
             {

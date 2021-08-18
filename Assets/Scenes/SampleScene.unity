@@ -5338,7 +5338,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 350155556}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1143397651}
+        m_MethodName: CheckCode
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &350155556
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32038,4 +32049,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 843db62b3d1c419419de742f1611ef58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  "\uC544\uC774\uD15C\uCF54\uB4DC": 1
   inventoryManager: {fileID: 1143397651}

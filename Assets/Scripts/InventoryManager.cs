@@ -24,6 +24,8 @@ public class InventoryManager : MonoBehaviour
     public mouselook _mouselook;
     public GameObject 인벤토리Canvas;
     public RayCast rayCast;
+    int 선택한코드;
+    int 정답코드;
 
     void Start()
     {
@@ -48,8 +50,9 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    public void CardClicked()
+    public void CardClicked(int code)
     {
+        정답코드 = code;
         selectMode = true;
         Cursor.lockState = CursorLockMode.Confined;
         _mouselook.canMouseMove = false;
@@ -127,13 +130,25 @@ public class InventoryManager : MonoBehaviour
         {
             아이템이름.text = DataManager.instance.itemDatas[forSlot.가진아이템코드].이름;
             아이템설명.text = DataManager.instance.itemDatas[forSlot.가진아이템코드].설명;
-        }
 
-        if (selectMode)
+            if (selectMode)
+            {
+                선택버튼.SetActive(true);
+                선택한코드 = DataManager.instance.itemDatas[forSlot.가진아이템코드].코드;
+            }
+        }
+    }
+
+    public void CheckCode()
+    {
+        if (정답코드 == 선택한코드)
         {
-            선택버튼.SetActive(true);
+            Debug.Log("잠금 해제");
         }
-
+        else
+        {
+            Debug.Log("해제 실패");
+        }
     }
 
 }

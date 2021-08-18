@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class ForCard : MonoBehaviour
 {
+
+    public int 아이템코드;
     public InventoryManager inventoryManager;
 
     public void OpenInventory()
     {
-        inventoryManager.CardClicked();
+        inventoryManager.CardClicked(아이템코드);
     }
 
 }
