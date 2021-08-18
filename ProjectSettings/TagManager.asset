@@ -11,6 +11,7 @@ TagManager:
   - paper
   - door
   - pin
+  - card
   layers:
   - Default
   - TransparentFX

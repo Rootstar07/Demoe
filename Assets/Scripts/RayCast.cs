@@ -12,9 +12,16 @@ public class RayCast : MonoBehaviour
     public int 현재조사중인아이템코드;
     public Animator animator;
     bool doorLock;
+    public bool rayActived = true;
+
+    private void Start()
+    {
+        rayActived = true;
+    }
 
     void Update()
     {
+
         // 레이캐스트가 보이게
         Debug.DrawRay(transform.position, transform.forward * range, Color.green);
 
@@ -31,6 +38,7 @@ public class RayCast : MonoBehaviour
             }
             else if (hit.collider.CompareTag("door"))
             {
+                //  열여있으면 닫기 아니라면 열기 활성화
                 if (hit.collider.gameObject.GetComponent<ForDoor>().isOpen && !doorLock)
                 {
                     uiText.text = "닫기";
@@ -39,25 +47,23 @@ public class RayCast : MonoBehaviour
                 {
                     uiText.text = "열기";
                 }
-                else
-                {
-                    uiText.text = "잠겨있다.";
-                }
 
-                // 문 열고 닫기
+                // 마우스 클릭했을때
                 if (Input.GetMouseButtonDown(0))
                 {
-                    if (hit.collider.gameObject.GetComponent<ForDoor>().canOpen)
+                    // 열수있는 문이고 잠금이 해제되어 있다면 문을 연다.
+                    if (hit.collider.gameObject.GetComponent<ForDoor>().canOpen && !hit.collider.gameObject.GetComponent<ForDoor>().isLocked)
                     {
                         hit.collider.gameObject.GetComponent<ForDoor>().DoorClicked();
                     }
                     else
                     {
+                        // 위의 조건이 아니라면 2초동안 잠겨있다를 보여준다.
+                        uiText.text = "잠겨있다.";
                         doorLock = true;
                         Invoke("isDoorLock", 2);
                     }
                 }
-
             }
             else if (hit.collider.CompareTag("paper"))
             {
@@ -90,13 +96,29 @@ public class RayCast : MonoBehaviour
                     }
                 }
             }
-            else if (hit.collider.CompareTag("pin"))
+            else if (hit.collider.CompareTag("pin") && rayActived)
+            {
+                if (hit.collider.transform.parent.GetComponent<ForDoor>().isLocked)
+                {
+                    uiText.text = "입력하기";
+
+                    if (Input.GetMouseButtonDown(0))
+                    {
+                        hit.collider.GetComponent<ForPin>().Pin();
+                    }
+                }
+                else
+                {
+                    uiText.text = "이미 해제된 단말이다";
+                }               
+            }
+            else if (hit.collider.CompareTag("card") && rayActived)
             {
                 uiText.text = "사용하기";
 
                 if (Input.GetMouseButtonDown(0))
                 {
-                    hit.collider.GetComponent<ForPin>().Pin();
+                    hit.collider.GetComponent<ForCard>().OpenInventory();
                 }
             }
             else
