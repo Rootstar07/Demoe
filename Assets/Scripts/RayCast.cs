@@ -10,7 +10,9 @@ public class RayCast : MonoBehaviour
     public TextMeshProUGUI uiText;
     public PaperManager paperManager;
     public int 현재조사중인아이템코드;
-       
+    public Animator animator;
+    bool doorLock;
+
     void Update()
     {
         // 레이캐스트가 보이게
@@ -22,15 +24,40 @@ public class RayCast : MonoBehaviour
         // 실제 검사
         if (Physics.Raycast(ray, out hit, range))
         {
-            if (hit.collider.CompareTag("Door"))
-            {
-                uiText.text = "열기";
-                현재조사중인아이템코드 = 0;
-            }
-            else if (hit.collider.CompareTag("Object"))
+            if (hit.collider.CompareTag("Object"))
             {
                 uiText.text = "조사하기";
                 현재조사중인아이템코드 = 0;
+            }
+            else if (hit.collider.CompareTag("door"))
+            {
+                if (hit.collider.gameObject.GetComponent<ForDoor>().isOpen && !doorLock)
+                {
+                    uiText.text = "닫기";
+                }
+                else if (!hit.collider.gameObject.GetComponent<ForDoor>().isOpen && !doorLock)
+                {
+                    uiText.text = "열기";
+                }
+                else
+                {
+                    uiText.text = "잠겨있다.";
+                }
+
+                // 문 열고 닫기
+                if (Input.GetMouseButtonDown(0))
+                {
+                    if (hit.collider.gameObject.GetComponent<ForDoor>().canOpen)
+                    {
+                        hit.collider.gameObject.GetComponent<ForDoor>().DoorClicked();
+                    }
+                    else
+                    {
+                        doorLock = true;
+                        Invoke("isDoorLock", 2);
+                    }
+                }
+
             }
             else if (hit.collider.CompareTag("paper"))
             {
@@ -63,16 +90,33 @@ public class RayCast : MonoBehaviour
                     }
                 }
             }
+            else if (hit.collider.CompareTag("pin"))
+            {
+                uiText.text = "사용하기";
+
+                if (Input.GetMouseButtonDown(0))
+                {
+                    hit.collider.GetComponent<ForPin>().Pin();
+                }
+            }
             else
             {
                 uiText.text = "";
                 현재조사중인아이템코드 = 0;
+                isDoorLock();
             }
         }
         else
         {
             uiText.text = "";
             현재조사중인아이템코드 = 0;
+            isDoorLock();
         }
+    }
+
+    // 문이 잠겨있을때 text 변경
+    public void isDoorLock()
+    {
+        doorLock = false;
     }
 }

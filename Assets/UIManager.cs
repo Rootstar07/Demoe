@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour
     public mouselook _mouselook;
     public GameObject tablet;
     bool canClosePaper;
+    public bool canUI = true;
 
     [Header("개별적으로 조사할때 페이퍼")]
     public GameObject paperUI;
@@ -23,52 +24,56 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (canUI)
         {
-            if (기록.activeSelf == true)
+            if (Input.GetKeyDown(KeyCode.Q))
             {
-                기록.SetActive(false);
-                tablet.SetActive(false);
-                Cursor.lockState = CursorLockMode.Locked;
-                _mouselook.canMouseMove = true;
-            }
-            else
-            {
-                기록.SetActive(true);              
-                tablet.SetActive(true);
-                인벤토리.SetActive(false);
-                Cursor.lockState = CursorLockMode.Confined;
-                _mouselook.canMouseMove = false;
+                if (기록.activeSelf == true)
+                {
+                    기록.SetActive(false);
+                    tablet.SetActive(false);
+                    Cursor.lockState = CursorLockMode.Locked;
+                    _mouselook.canMouseMove = true;
+                }
+                else
+                {
+                    기록.SetActive(true);
+                    tablet.SetActive(true);
+                    인벤토리.SetActive(false);
+                    Cursor.lockState = CursorLockMode.Confined;
+                    _mouselook.canMouseMove = false;
 
-                paperManager.DeleteRecordData();
+                    paperManager.DeleteRecordData();
+                }
+            }
+
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                if (인벤토리.activeSelf == true)
+                {
+                    인벤토리.SetActive(false);
+                    tablet.SetActive(false);
+                    Cursor.lockState = CursorLockMode.Locked;
+                    _mouselook.canMouseMove = true;
+                }
+                else
+                {
+                    인벤토리.SetActive(true);
+                    기록.SetActive(false);
+                    tablet.SetActive(false);
+                    Cursor.lockState = CursorLockMode.Confined;
+                    _mouselook.canMouseMove = false;
+
+                    inventoryManager.CheckItem();
+                }
+            }
+
+            if (Input.GetKeyDown(KeyCode.F) && canClosePaper)
+            {
+                SavePaper();
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            if (인벤토리.activeSelf == true)
-            {
-                인벤토리.SetActive(false);
-                tablet.SetActive(false);
-                Cursor.lockState = CursorLockMode.Locked;
-                _mouselook.canMouseMove = true;
-            }
-            else
-            {
-                인벤토리.SetActive(true);
-                기록.SetActive(false);
-                tablet.SetActive(false);
-                Cursor.lockState = CursorLockMode.Confined;
-                _mouselook.canMouseMove = false;
-
-                inventoryManager.CheckItem();
-            }
-        }
-
-        if (Input.GetKeyDown(KeyCode.F) && canClosePaper)
-        {
-            SavePaper();
-        }
     }
 
     public void ShowPaper(GameObject paper)

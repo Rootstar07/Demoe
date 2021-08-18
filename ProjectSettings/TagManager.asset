@@ -9,6 +9,8 @@ TagManager:
   - Text
   - item
   - paper
+  - door
+  - pin
   layers:
   - Default
   - TransparentFX
