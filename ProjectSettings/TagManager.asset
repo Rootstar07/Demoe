@@ -12,6 +12,7 @@ TagManager:
   - door
   - pin
   - card
+  - talk
   layers:
   - Default
   - TransparentFX

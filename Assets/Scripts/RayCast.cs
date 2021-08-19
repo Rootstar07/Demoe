@@ -9,6 +9,7 @@ public class RayCast : MonoBehaviour
     public UIManager uIManager;
     public TextMeshProUGUI uiText;
     public PaperManager paperManager;
+    public TalkManager talkManager;
     public int 현재조사중인아이템코드;
     public Animator animator;
     bool doorLock;
@@ -28,15 +29,24 @@ public class RayCast : MonoBehaviour
         Ray ray = new Ray(transform.position, transform.forward);
 
         // 실제 검사
-        if (Physics.Raycast(ray, out hit, range))
+        if (Physics.Raycast(ray, out hit, range) && rayActived)
         {
-            if (hit.collider.CompareTag("Object"))
+            if (hit.collider.CompareTag("talk"))
             {
+                animator.SetBool("isCursor", true);
                 uiText.text = "조사하기";
                 현재조사중인아이템코드 = 0;
+
+                if (Input.GetMouseButtonDown(0))
+                {
+                    uiText.text = "";
+                    talkManager.TalkStart(hit.collider.gameObject);
+                }
+
             }
             else if (hit.collider.CompareTag("door"))
             {
+                animator.SetBool("isCursor", true);
                 //  열여있으면 닫기 아니라면 열기 활성화
                 if (hit.collider.gameObject.GetComponent<ForDoor>().isOpen && !doorLock)
                 {
@@ -66,6 +76,7 @@ public class RayCast : MonoBehaviour
             }
             else if (hit.collider.CompareTag("paper"))
             {
+                animator.SetBool("isCursor", true);
                 uiText.text = "읽기";
                 현재조사중인아이템코드 = 0;
 
@@ -78,6 +89,7 @@ public class RayCast : MonoBehaviour
             }
             else if (hit.collider.CompareTag("item"))
             {
+                animator.SetBool("isCursor", true);
                 uiText.text = "가져가기";
                 현재조사중인아이템코드 = hit.collider.gameObject.GetComponent<ForItem>().아이템코드;
 
@@ -90,13 +102,18 @@ public class RayCast : MonoBehaviour
                         {
                             hit.collider.gameObject.SetActive(false);
                             DataManager.instance.itemDatas[i].인벤토리여부 = true;
+
+                            // 아이템 피드백                        
+                            uIManager.FeedBack(hit.collider.gameObject, "item");
+
                             break;
                         }
                     }
                 }
             }
-            else if (hit.collider.CompareTag("pin") && rayActived)
+            else if (hit.collider.CompareTag("pin"))
             {
+                animator.SetBool("isCursor", true);
                 if (hit.collider.transform.parent.GetComponent<ForDoor>().isLocked)
                 {
                     uiText.text = "입력하기";
@@ -111,17 +128,26 @@ public class RayCast : MonoBehaviour
                     uiText.text = "이미 해제된 단말이다";
                 }
             }
-            else if (hit.collider.CompareTag("card") && rayActived)
+            else if (hit.collider.CompareTag("card"))
             {
-                uiText.text = "사용하기";
-
-                if (Input.GetMouseButtonDown(0))
+                animator.SetBool("isCursor", true);
+                if (hit.collider.transform.parent.GetComponent<ForDoor>().isLocked)
                 {
-                    hit.collider.GetComponent<ForCard>().OpenInventory();
+                    uiText.text = "사용하기";
+
+                    if (Input.GetMouseButtonDown(0))
+                    {
+                        hit.collider.GetComponent<ForCard>().OpenInventory();
+                    }
+                }
+                else
+                {
+                    uiText.text = "이미 해제된 단말이다";
                 }
             }
             else
             {
+                animator.SetBool("isCursor", false);
                 uiText.text = "";
                 현재조사중인아이템코드 = 0;
                 isDoorLock();
@@ -129,6 +155,7 @@ public class RayCast : MonoBehaviour
         }
         else
         {
+            animator.SetBool("isCursor", false);
             uiText.text = "";
             현재조사중인아이템코드 = 0;
             isDoorLock();

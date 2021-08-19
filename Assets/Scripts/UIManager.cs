@@ -16,6 +16,9 @@ public class UIManager : MonoBehaviour
     bool canClosePaper;
     public bool canUI = true;
 
+    [Header("피드백 버블")]
+    public GameObject[] feedBack;
+
     [Header("개별적으로 조사할때 페이퍼")]
     public GameObject paperUI;
 
@@ -38,6 +41,7 @@ public class UIManager : MonoBehaviour
                 else
                 {
                     기록.SetActive(true);
+                    paperManager.TypeColorReset();
                     tablet.SetActive(true);
                     인벤토리.SetActive(false);
                     Cursor.lockState = CursorLockMode.Confined;
@@ -59,7 +63,7 @@ public class UIManager : MonoBehaviour
                 }
                 else
                 {
-                    인벤토리.SetActive(true);
+                    인벤토리.SetActive(true);                  
                     기록.SetActive(false);
                     tablet.SetActive(false);
                     Cursor.lockState = CursorLockMode.Confined;
@@ -71,6 +75,7 @@ public class UIManager : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.F) && canClosePaper)
             {
+                FeedBack(nowPaper, "paper");
                 SavePaper();
             }
         }
@@ -87,7 +92,6 @@ public class UIManager : MonoBehaviour
 
         페이퍼내용.text =
             DataManager.instance.paperDatas[(int)nowPaper.GetComponent<ForPaper>().기록타입].기록목록[(int)nowPaper.GetComponent<ForPaper>().기록코드].내용;
-
 
     }
 
@@ -106,6 +110,42 @@ public class UIManager : MonoBehaviour
 
         // 조사 목록에 추가
         DataManager.instance.paperDatas[(int)nowPaper.GetComponent<ForPaper>().기록타입].기록목록[(int)nowPaper.GetComponent<ForPaper>().기록코드].기록활성여부 = true;
-        
     }
+
+    public void FeedBack(GameObject target, string type)
+    {
+        int bubbleIndex;
+
+        // 남은 버블 확인
+        for (int i = 0; i < feedBack.Length; i++)
+        {
+            if (!feedBack[i].transform.GetChild(0).gameObject.activeSelf)
+            {
+                bubbleIndex = i;
+
+                feedBack[bubbleIndex].GetComponent<Animator>().SetTrigger("Show");
+
+                // 텍스트 변경
+                if (type == "item")
+                {
+                    feedBack[bubbleIndex].transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
+                        "아이템을 보관함에 추가하였습니다.";
+                    feedBack[bubbleIndex].transform.GetChild(1).GetComponent<TextMeshProUGUI>().text =
+                        DataManager.instance.itemDatas[target.GetComponent<ForItem>().아이템코드].이름;
+                }
+                else if (type == "paper")
+                {
+                    feedBack[bubbleIndex].transform.GetChild(0).GetComponent<TextMeshProUGUI>().text =
+                         "새로운 정보를 기록하였습니다.";
+                    feedBack[bubbleIndex].transform.GetChild(1).GetComponent<TextMeshProUGUI>().text =
+                        DataManager.instance.paperDatas[(int)target.GetComponent<ForPaper>().기록타입].기록목록[target.GetComponent<ForPaper>().기록코드].기록이름;
+
+                    
+                }
+
+                break;
+            }
+        }
+    }
+
 }

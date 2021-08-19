@@ -112,7 +112,6 @@ public class InventoryManager : MonoBehaviour
                         {
                             slotLists[j].GetComponent<ForSlot>().가진아이템코드 = DataManager.instance.itemDatas[i].코드;
                             slotLists[j].GetComponent<ForSlot>().아이템이미지.sprite = DataManager.instance.itemDatas[i].이미지;
-                            // slotLists[i].GetComponent<ForSlot>().아이템이미지.color = 슬롯활성색;
                             break;
                         }
                     }
@@ -127,7 +126,6 @@ public class InventoryManager : MonoBehaviour
         {
             slotLists[i].GetComponent<ForSlot>().가진아이템코드 = 0;
             slotLists[i].GetComponent<ForSlot>().아이템이미지.sprite = 기본이미지;
-            // slotLists[i].GetComponent<ForSlot>().아이템이미지.color = 슬롯비활성색;
 
             아이템이름.text = "";
             아이템설명.text = "";
