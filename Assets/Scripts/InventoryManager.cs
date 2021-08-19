@@ -26,9 +26,13 @@ public class InventoryManager : MonoBehaviour
     public RayCast rayCast;
     int 선택한코드;
     int 정답코드;
+    GameObject 단말기;
+    ForSlot 임시저장실롯;
 
     void Start()
     {
+        selectMode = false;
+
         // 슬롯 리스트 등록
         for (int i = 0; i < slotList.transform.childCount; i++)
         {
@@ -41,18 +45,24 @@ public class InventoryManager : MonoBehaviour
         // 선택모드에서 종료
         if (Input.GetKeyDown(KeyCode.F) && selectMode)
         {
-            Cursor.lockState = CursorLockMode.Locked;
-            _mouselook.canMouseMove = true;
-            selectMode = false;
-            rayCast.rayActived = true;
-
-            인벤토리Canvas.SetActive(false);
+            SelectModeInventoryOff();
         }
     }
 
-    public void CardClicked(int code)
+    public void SelectModeInventoryOff()
     {
-        정답코드 = code;
+        Cursor.lockState = CursorLockMode.Locked;
+        _mouselook.canMouseMove = true;
+        selectMode = false;
+        rayCast.rayActived = true;
+
+        인벤토리Canvas.SetActive(false);
+    }
+
+    public void CardClicked(GameObject target)
+    {
+        정답코드 = target.GetComponent<ForCard>().아이템코드;
+        단말기 = target;
         selectMode = true;
         Cursor.lockState = CursorLockMode.Confined;
         _mouselook.canMouseMove = false;
@@ -133,6 +143,8 @@ public class InventoryManager : MonoBehaviour
 
             if (selectMode)
             {
+                임시저장실롯 = forSlot;
+
                 선택버튼.SetActive(true);
                 선택한코드 = DataManager.instance.itemDatas[forSlot.가진아이템코드].코드;
             }
@@ -144,10 +156,26 @@ public class InventoryManager : MonoBehaviour
         if (정답코드 == 선택한코드)
         {
             Debug.Log("잠금 해제");
+
+            // 잠금해제
+            단말기.transform.parent.GetComponent<ForDoor>().isLocked = false;
+
+            // 아이템 삭제
+            DataManager.instance.itemDatas[임시저장실롯.가진아이템코드].인벤토리여부 = false;
+
+            // 인벤토리 끄기
+            SelectModeInventoryOff();
+
+            // 패널 바꾸기
+            단말기.GetComponent<ForCard>().빨강패널.SetActive(false);
+
         }
         else
         {
             Debug.Log("해제 실패");
+
+            // 인벤토리 끄기
+            SelectModeInventoryOff();
         }
     }
 

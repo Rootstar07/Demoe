@@ -26,7 +26,7 @@ public class UIManager : MonoBehaviour
     {
         if (canUI)
         {
-            if (Input.GetKeyDown(KeyCode.Q))
+            if (Input.GetKeyDown(KeyCode.Q) && !inventoryManager.selectMode)
             {
                 if (기록.activeSelf == true)
                 {
