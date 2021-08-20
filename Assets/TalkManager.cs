@@ -14,24 +14,10 @@ public class TalkManager : MonoBehaviour
     
     bool talkMode = false;
 
-    public void TalkStart(GameObject 대화오브젝트)
-    {
-        대화코드 = 대화오브젝트.GetComponent<ForTalk>().대화코드;
-        대화인덱스 = 0;
-
-        rayCast.rayActived = false;
-        _mouselook.canMouseMove = false;
-        대화UI.SetActive(true);
-        talkMode = true;
-
-        // 초기 대화
-        대화text.text = DataManager.instance.talkDatas[대화코드].대화리스트[대화인덱스].대화;
-    }
-
     private void Update()
     {
         if (Input.GetMouseButtonDown(0) && talkMode)
-        {         
+        {
             // 마지막 대화인지 확인
             if (DataManager.instance.talkDatas[대화코드].대화리스트.Length - 1 == 대화인덱스)
             {
@@ -53,13 +39,33 @@ public class TalkManager : MonoBehaviour
         }
     }
 
+    public void TalkStart(GameObject 대화오브젝트)
+    {
+        대화코드 = 대화오브젝트.GetComponent<ForTalk>().대화코드;
+        대화인덱스 = 0;
+
+        rayCast.rayActived = false;
+        _mouselook.canMouseMove = false;
+        대화UI.SetActive(true);
+        talkMode = true;
+
+        // 초기 대화
+        대화text.text = DataManager.instance.talkDatas[대화코드].대화리스트[대화인덱스].대화;
+
+        // 마우스 느리게
+        _mouselook.FocusTalk();
+    }
+
     public void TalkEnd()
     {
         DataManager.instance.talkDatas[대화코드].아이템활성여부 = true;
-
         talkMode = false;
+
         rayCast.rayActived = true;
         _mouselook.canMouseMove = true;
         대화UI.SetActive(false);
+
+        // 마우스 리셋
+        _mouselook.FocuseStop();
     }
 }

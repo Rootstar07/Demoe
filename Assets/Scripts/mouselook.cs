@@ -23,7 +23,6 @@ public class mouselook : MonoBehaviour
     {
         if (canMouseMove)
         {
-
             float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
             float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
@@ -35,5 +34,15 @@ public class mouselook : MonoBehaviour
             playerBody.Rotate(Vector3.up * mouseX);
         }
 
+    }
+
+    public void FocusTalk()
+    {
+        mouseSensitivity = 20f;
+    }
+
+    public void FocuseStop()
+    {
+        mouseSensitivity = 1000f;
     }
 }
